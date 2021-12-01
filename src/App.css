@@ -1,38 +1,76 @@
-.App {
-  text-align: center;
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+ul {
+    list-style: none;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.link {
+    color: #1976d2;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.title {
+    text-transform: uppercase;
+    margin-bottom: 20px;
 }
 
-.App-link {
-  color: #61dafb;
+.tags {
+    display: block;
+    text-decoration: none;
+    color: #fff;
+    background-color: grey;
+    padding: 10px 15px;
+    border-radius: 20px;
+    margin: 10px 10px 5px 0px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.autocomplete-tags {
+    display: none;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.autocomplete-tags.active {
+    display: block;
+}
+
+.autocomplete-tags__item {
+    cursor: pointer;
+    padding: 10px;
+    transition: all .3s;
+}
+
+.autocomplete-tags__item:hover {
+    background-color: #dfe6e9;
+}
+
+.drop-area {
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    border: 2px dashed #000;
+}
+
+.drop-area.active {
+    border: 2px dashed gray;
+}
+
+.image {
+    width: 100%;
+    height: 100%;
+}
+
+.upload-image {
+    width: 100%;
+    height: 100%;
+}
+
+@media screen and (max-width: 600px) {
+    .tags {
+        padding: 5px 10px;
+        font-size: 14px;
+    }
 }
