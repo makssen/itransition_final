@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { initAuthAction } from './store/actions/userActions';
 import { Loader } from './components/Loader';
 import { SearchPage } from './pages/SearchPage';
+import { EditPage } from './pages/EditPage';
 
 
 function App() {
@@ -26,12 +27,18 @@ function App() {
         <BrowserRouter>
           <Routes>
             {isAuth ?
-              privateRoutes.map((item, i) => <Route key={i} path={item.path} element={item.component} />)
+              (
+                <>
+                  {privateRoutes.map((item, i) => <Route key={i} path={item.path} element={item.component} />)}
+                  <Route path="/edit/:id" element={<EditPage />} />
+                </>
+              )
               :
-              (<>
-                {publicRoutes.map((item, i) => <Route key={i} path={item.path} element={item.component} />)}
-                <Route path="/registration" element={<SignUp />} />
-              </>
+              (
+                <>
+                  {publicRoutes.map((item, i) => <Route key={i} path={item.path} element={item.component} />)}
+                  <Route path="/registration" element={<SignUp />} />
+                </>
               )
             }
             <Route path="/overview/:id" element={<PostPage />} />

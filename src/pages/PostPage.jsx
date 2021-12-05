@@ -65,7 +65,7 @@ export const PostPage = () => {
                         <Grid item>
                             <Typography mt={3} mb={3} variant="body1">{post.text}</Typography>
                             <Grid item>
-                                <img className="image" src={post.images[0]} alt={post.title} />
+                                {post.images.map((item, i) => <img key={i} className="image" src={item} alt={`${post.title}i`} />)}
                             </Grid>
                         </Grid>
                         <Grid container>

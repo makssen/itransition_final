@@ -25,6 +25,7 @@ export const CreatePost = () => {
 
     const { setFiles, previews } = useFileReader();
     const { tags } = useSelector(state => state.posts);
+    const { user } = useSelector(state => state.user);
 
     const deleteTag = (index) => {
         setSelectTags(selectTags.filter((_, i) => i !== index));
@@ -74,14 +75,17 @@ export const CreatePost = () => {
                 setIsSubmit(false);
             } else {
                 PostService.create({
-                    title,
-                    type,
-                    tags,
-                    text,
-                    grade,
+                    title: title.value,
+                    type: type.value,
+                    tags: selectTags,
+                    text: text.value,
+                    grade: grade.value,
                     images: previews,
-                    dateTime: new Date()
-                }).catch(e => console.log(e))
+                    dateTime: new Date(),
+                    user_id: user.id
+                })
+                    .then(navigate('/'))
+                    .catch(e => console.log(e))
             }
         }
     }, [title.error, type.error, selectTagsError, grade.error, text.error, isSubmit]);

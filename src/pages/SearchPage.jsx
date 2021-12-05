@@ -21,9 +21,6 @@ export const SearchPage = () => {
             })
     }, [query]);
 
-    console.log(isLoaded);
-
-
     return (
         <DefaultLayout>
             <h2 className="title">Обзоры</h2>

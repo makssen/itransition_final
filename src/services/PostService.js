@@ -22,10 +22,16 @@ export default class PostService {
     }
 
     static async create(post) {
-        const { data } = await axios.post(`${process.env.REACT_APP_API_URL}/overviews`, {
-            data: post,
-            headers: { 'Authorization': localStorage.getItem('token') }
+        const { data } = await axios.post(`${process.env.REACT_APP_API_URL}/overviews`, {...post }, {
+            headers: {
+                'Authorization': localStorage.getItem('token')
+            }
         });
+        return data;
+    }
+
+    static async delete(id) {
+        const { data } = await axios.delete(`${process.env.REACT_APP_API_URL}/overviews/${id}`);
         return data;
     }
 }

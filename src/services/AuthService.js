@@ -28,4 +28,10 @@ export default class AuthService {
         localStorage.setItem('token', data.token)
         return jwtDecode(data.token);
     }
+
+
+    static async getUser(id) {
+        const { data } = await axios.get(`${process.env.REACT_APP_API_URL}/users/${id}`);
+        return data;
+    }
 }
