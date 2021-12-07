@@ -25,8 +25,12 @@ export const Profile = () => {
     const navigate = useNavigate();
 
     const deletePost = (id) => {
+        setIsLoaded(true);
         PostService.delete(id)
-            .then(navigate('/'))
+            .then(resp => {
+                setData(prev => ({ ...prev, overviews: data.overviews.filter(item => item.id !== id) }));
+                setIsLoaded(false);
+            })
             .catch(e => console.log(e))
     }
 
@@ -67,7 +71,7 @@ export const Profile = () => {
                                             {item.id}
                                         </TableCell>
                                         <TableCell align="left"><Link to={`/overview/${item.id}`}>{item.title}</Link></TableCell>
-                                        <TableCell align="left">{item.dateTime}</TableCell>
+                                        <TableCell align="left">{new Date(item.dateTime).toLocaleDateString()}</TableCell>
                                         <TableCell align="center">
                                             <Link to={`/edit/${item.id}`}><IconButton color="primary"><ModeEditIcon /></IconButton></Link>
                                         </TableCell>

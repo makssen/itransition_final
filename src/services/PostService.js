@@ -30,6 +30,11 @@ export default class PostService {
         return data;
     }
 
+    static async update(id, post) {
+        const { data } = await axios.put(`${process.env.REACT_APP_API_URL}/overviews/${id}`, {...post });
+        return data;
+    }
+
     static async delete(id) {
         const { data } = await axios.delete(`${process.env.REACT_APP_API_URL}/overviews/${id}`);
         return data;

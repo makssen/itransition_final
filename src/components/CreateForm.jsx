@@ -1,27 +1,22 @@
 import { Button, FormControl, FormHelperText, Grid, IconButton, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Autocomplete } from '../components/Autocomplete';
-import { DefaultLayout } from '../components/DefaultLayout';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { UploadFile } from '../components/UploadFile';
 import { useFileReader } from '../hooks/useFileReader';
 import { useSelector } from 'react-redux';
 import { useInput } from '../hooks/useInput';
-import PostService from '../services/PostService';
 
-export const CreatePost = () => {
+export const CreateForm = ({ post, isSubmit, setPost, setIsSubmit }) => {
 
-    const navigate = useNavigate();
-
-    const [isSubmit, setIsSubmit] = useState(false);
-    const [selectTags, setSelectTags] = useState([]);
+    const [selectTags, setSelectTags] = useState([...post.tags]);
     const [selectTagsError, setSelectTagsError] = useState('');
+    const [errorImage, setErrorImage] = useState('');
 
-    const title = useInput('');
-    const type = useInput('');
-    const text = useInput('');
-    const grade = useInput('');
+    const title = useInput(post.title || '');
+    const type = useInput(post.type || '');
+    const text = useInput(post.text || '');
+    const grade = useInput(post.grade || '');
 
     const { setFiles, previews } = useFileReader();
     const { tags } = useSelector(state => state.posts);
@@ -68,15 +63,21 @@ export const CreatePost = () => {
             grade.setError('');
         }
 
+        if (!previews.length) {
+            setErrorImage('Добавьте хотя бы одно изображение');
+        } else {
+            setErrorImage('');
+        }
+
         setIsSubmit(true);
     }
 
     useEffect(() => {
         if (isSubmit) {
-            if (title.error || type.error || selectTagsError || grade.error || text.error) {
+            if (title.error || type.error || selectTagsError || grade.error || text.error || errorImage) {
                 setIsSubmit(false);
             } else {
-                PostService.create({
+                setPost({
                     title: title.value,
                     type: type.value,
                     tags: selectTags,
@@ -85,17 +86,13 @@ export const CreatePost = () => {
                     images: previews,
                     dateTime: new Date(),
                     user_id: user.id
-                })
-                    .then(navigate('/'))
-                    .catch(e => console.log(e))
+                });
             }
         }
-    }, [title.error, type.error, selectTagsError, grade.error, text.error, isSubmit]);
-
+    }, [title.error, type.error, selectTagsError, grade.error, text.error, errorImage, isSubmit]);
 
     return (
-        <DefaultLayout>
-            <h2 className="title">Создать обзор</h2>
+        <>
             <form onSubmit={handleSubmit}>
                 <Grid container spacing={3} sx={{ pr: '24px' }}>
                     <Grid item xs={12} sm={6}>
@@ -151,26 +148,46 @@ export const CreatePost = () => {
                         />
                     </Grid>
                     <Grid item xs={12}>
+                        {errorImage && <Typography variant="h6" color="error" mb={1}>{errorImage}</Typography>}
                         <Typography variant="h6" mb={1}>Добавьте не более 3 изображений</Typography>
                         <UploadFile setFiles={setFiles} />
                     </Grid>
                     <Grid item xs={12}>
                         <Grid container>
-                            {previews.map((item, i) =>
-                                <Grid key={i} item
-                                    sx={{
-                                        height: { xs: 100, md: 200 },
-                                        backgroundImage: `url(${item})`,
-                                        backgroundRepeat: 'no-repeat',
-                                        backgroundSize: { xs: 'contain', md: 'cover' },
-                                        backgroundPosition: 'center',
-                                        border: '1px solid gray',
-                                        mr: '20px'
-                                    }}
-                                    xs={3}
-                                >
-                                </Grid>
-                            )}
+                            {
+                                post.images ?
+                                    post.images.map((item, i) =>
+                                        <Grid key={i} item
+                                            sx={{
+                                                height: { xs: 100, md: 200 },
+                                                backgroundImage: `url(${item})`,
+                                                backgroundRepeat: 'no-repeat',
+                                                backgroundSize: { xs: 'contain', md: 'cover' },
+                                                backgroundPosition: 'center',
+                                                border: '1px solid gray',
+                                                mr: '20px'
+                                            }}
+                                            xs={3}
+                                        >
+                                        </Grid>
+                                    )
+                                    :
+                                    previews.map((item, i) =>
+                                        <Grid key={i} item
+                                            sx={{
+                                                height: { xs: 100, md: 200 },
+                                                backgroundImage: `url(${item})`,
+                                                backgroundRepeat: 'no-repeat',
+                                                backgroundSize: { xs: 'contain', md: 'cover' },
+                                                backgroundPosition: 'center',
+                                                border: '1px solid gray',
+                                                mr: '20px'
+                                            }}
+                                            xs={3}
+                                        >
+                                        </Grid>
+                                    )
+                            }
                         </Grid>
                     </Grid>
                     <Grid item xs={12} md={6} mb={2}>
@@ -189,6 +206,6 @@ export const CreatePost = () => {
                 </Grid>
                 <Button type="submit" variant="contained" size="large" color="primary">Создать</Button>
             </form>
-        </DefaultLayout>
+        </>
     );
 }
